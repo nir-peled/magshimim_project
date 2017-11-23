@@ -45,10 +45,18 @@ class PriorityQueue
 	end
 	alias_method :length, :size
 
-	def decrease_priority(value, new_priority)
+	def change_priority(value, new_priority)
 		element_index = @elements.index {|e| e.value == value}
-		@elements[element_index].priority [ new_priority]
-		bubble_up element_index
+		element = @elements[element_index]
+
+		old_priority = element.priority
+		element.priority = new_priority
+		if @is_bigger_proc.call(old_priority, new_priority)
+			bubble_up element_index
+		else
+			bubble_down element_index
+		end
+		self
 	end
 
 	private
