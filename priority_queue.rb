@@ -13,7 +13,7 @@ class PriorityQueue
 		end
 	end
 
-	attr_writer :is_bigger_proc
+	attr_reader :is_bigger_proc
 
 	def initialize(elements=nil, cmp=lambda {|a, b| a >= b})
 		@elements = [nil]
@@ -33,7 +33,7 @@ class PriorityQueue
 		bubble_down(1)
 		max
 	end
-	alias_method :dequeue, pop
+	alias_method :dequeue, :pop
 
 	def peek
 		@elements[1].value
