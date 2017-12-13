@@ -1,9 +1,25 @@
+require 'set'
+load 'map_static_object.rb'
 
-class Junction < MapObject
-	def initialize(pos_x, pos_y, road_n, road_e, road_s, road_w)
-		super pos_x, pos_y, :movable => false
-		roads = [road_n, road_e, road_s, road_w]
+class Junction < MapStaticObject
+
+	def initialize(position)
+		super position
+		@outgoing_roads = Set.new
 	end
-	
-	
+
+	# for Set operations
+	def eql?(other)
+		self.position==other.position
+	end
+
+	# for Set operations
+	def hash
+		"#{position.x}0000#{position.y}".to_i
+	end
+
+	def add_road(road)
+		@outgoing_roads << road
+	end
+
 end
