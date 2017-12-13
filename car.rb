@@ -1,5 +1,5 @@
 
 class Car < MapObject
-	def initialize(car_lenght, )
+	def initialize(car_length)
 	end
 end
