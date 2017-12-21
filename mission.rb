@@ -25,6 +25,15 @@ module Mission
 		end
 	end
 
+	def crash!
+		if status==Statuses::DRIVING
+			# do crash actions
+			status == Statuses::CRASHED
+		else
+			Log.warn "Cannot 'crash!' when #{status}"
+		end
+	end
+
 private 
 	attr :start_junction, :end_junction, :status, :route, :current_road, :current_distance
 end
