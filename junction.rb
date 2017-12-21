@@ -22,4 +22,11 @@ class Junction < MapStaticObject
 		@outgoing_roads << road
 	end
 
+	def as_list_line
+		"#{to_s.ljust(10,' ')}|#{position.to_s.center(10,' ')}"
+	end
+
+	def Junction.list_header
+		"\nJunctions\n=========\nname      |   POS    \n--------------------------"
+	end
 end

@@ -1,23 +1,26 @@
 load 'map_dynamic_object.rb'
-load 'car_mission.rb'
+load 'mission.rb'
 
 class Car < MapDynamicObject
 
-	attr_reader :length, :status, :name, :id
+	attr_reader :length, :name, :id
+	alias :id :object_id
 
-	include CarMission
-
-	module Statuses
-		ACTIVE = :ACTIVE
-		INACTIVE = :INACTIVE
-		CRASHED = :CRASHED
-	end
+	include Mission
 
 	def initialize(length, name=nil)
 		@length = length
-		@status = Statuses::INACTIVE
 		@name = name
 	end
 
+	def to_s() @name; end
+
+	def as_list_line
+		"#{to_s.ljust(6,' ')}|#{length.to_s.center(8,' ')}| #{status}"
+	end
+
+	def Car.list_header
+		"\nCars\n=========\nname  | Length | Status   | Mission |Position\n------------------------------------"
+	end
 
 end

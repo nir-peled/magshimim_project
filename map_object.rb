@@ -20,7 +20,9 @@ class MapObject
 		@picture.draw_rot(x, y, 1, @angle)
 	end
 
-	private
+	def to_s() map_name; end
+
+private
 
 	def map_bound_pos(pos, bound)
 		if @map_bound
@@ -33,4 +35,5 @@ class MapObject
 			pos % bound
 		end
 	end
+
 end

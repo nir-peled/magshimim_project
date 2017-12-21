@@ -3,13 +3,17 @@ load 'map_static_object.rb'
 class Road < MapStaticObject
 
 	attr_reader :junctions, :speed_limit
-	
-	def initialize(junctions, road_speed_limit=-1)
+
+	def initialize(junctions, road_speed_limit=nil)
 		super nil
 		@junctions = junctions
 		@speed_limit = road_speed_limit
 	end
-	
+
+	def ==(other)
+		start_junction==other.start_junction && end_junction==other.end_junction
+	end
+
 	def connected?(junction)
 		@junctions.include? junction
 	end
@@ -30,4 +34,11 @@ class Road < MapStaticObject
 		@junctions[1]
 	end
 
+	def as_list_line
+		"#{to_s.ljust(10,' ')}| #{start_junction.to_s.ljust(5,' ')}| #{end_junction.to_s.ljust(5,' ')}"
+	end
+	
+	def Road.list_header
+		"\nRoads\n=========\nname      | From | To\n--------------------------"
+	end
 end

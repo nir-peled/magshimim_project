@@ -15,11 +15,15 @@ module GeoHelper
 		def distance_to(position)
 			if position.x == x
 				(position.y - y).abs
-			elsif position.y == @y
+			elsif position.y == y
 				(position.x - x).abs
 			else
 				raise ArgumentError, "Unmeasurable distance"
 			end
+		end
+
+		def to_s
+			"#{x},#{y}"
 		end
 	end
 

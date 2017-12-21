@@ -1,3 +1,26 @@
-2017-12-13 22:01:03 +0200 (FULL) Junction J1 added.
-2017-12-13 22:01:03 +0200 (FULL) Junction J2 added.
-2017-12-13 22:01:03 +0200 (FULL) Road R1 added.
+2017-12-19 18:53:13 +0200 (4) Log started with level 0
+2017-12-19 18:53:13 +0200 (1) Junction J1 added.
+2017-12-19 18:53:13 +0200 (1) Junction J2 added.
+2017-12-19 18:53:13 +0200 (1) Road R1 added.
+2017-12-19 18:53:13 +0200 (1) Car Juan added.
+2017-12-19 18:53:13 +0200 (1) Car Mini added.
+
+Junctions
+=========
+name      |   POS    
+--------------------------
+J1        |   1,1    
+J2        |   5,5    
+
+Roads
+=========
+name      | From | To
+--------------------------
+R1        | J1   | J2   
+
+Cars
+=========
+name  | Length | Status   | Mission |Position
+------------------------------------
+Juan  |   4    | INACTIVE
+Mini  |   3    | INACTIVE
