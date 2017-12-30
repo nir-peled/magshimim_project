@@ -1,5 +1,12 @@
+load 'map_helper.rb'
 
 class Map
-	def initialize(args)
+	include MapHelper
+
+	def initialize(args=nil)
+		init
+	end
+
+	def traffic(road)
 	end
 end
