@@ -1,5 +1,6 @@
 load 'map_dynamic_object.rb'
 load 'mission.rb'
+load 'driving.rb'
 
 class Car < MapDynamicObject
 
@@ -7,6 +8,7 @@ class Car < MapDynamicObject
 	alias :id :object_id
 
 	include Mission
+	include Driving
 
 	def initialize(length, name=nil)
 		@length = length

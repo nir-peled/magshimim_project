@@ -7,11 +7,20 @@ class Road < MapStaticObject
 	def initialize(junctions, road_speed_limit=nil)
 		super nil
 		@junctions = junctions
+		start_junction.add_road self
 		@speed_limit = road_speed_limit
 	end
 
 	def ==(other)
 		start_junction==other.start_junction && end_junction==other.end_junction
+	end
+
+	def eql?(other)
+		start_junction==other.start_junction && end_junction==other.end_junction
+	end
+
+	def hash
+		"#{start_junction.hash}0000#{end_junction.hash}".to_i
 	end
 
 	def connected?(junction)

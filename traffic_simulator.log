@@ -1,26 +1,40 @@
-2017-12-19 18:53:13 +0200 (4) Log started with level 0
-2017-12-19 18:53:13 +0200 (1) Junction J1 added.
-2017-12-19 18:53:13 +0200 (1) Junction J2 added.
-2017-12-19 18:53:13 +0200 (1) Road R1 added.
-2017-12-19 18:53:13 +0200 (1) Car Juan added.
-2017-12-19 18:53:13 +0200 (1) Car Mini added.
-
+2018-01-06 16:58:24 +0200 (Err) Log started with level 0
+2018-01-06 16:58:24 +0200 (Full) Junction J1 added.
+2018-01-06 16:58:24 +0200 (Full) Junction J2 added.
+2018-01-06 16:58:24 +0200 (Full) Road R1 added. Roads: 1 Junctions: 2
+2018-01-06 16:58:24 +0200 (Full) Junction J2 added.
+2018-01-06 16:58:24 +0200 (Full) Junction J3 added.
+2018-01-06 16:58:24 +0200 (Full) Road R2 added. Roads: 2 Junctions: 3
+2018-01-06 16:58:24 +0200 (Full) Car Juan added.
+Junctions: 3
+    
 Junctions
 =========
-name      |   POS    
+    name      |   POS    | Roads
 --------------------------
-J1        |   1,1    
-J2        |   5,5    
+(0) J1        |   1,1    |R1
+(1) J2        |   5,5    |R2
+(2) J3        |   6,6    |
+2018-01-06 16:58:24 +0200 (Full) Roads: 2
 
 Roads
 =========
 name      | From | To
 --------------------------
 R1        | J1   | J2   
+R2        | J2   | J3   
 
 Cars
 =========
 name  | Length | Status   | Mission |Position
 ------------------------------------
-Juan  |   4    | INACTIVE
-Mini  |   3    | INACTIVE
+Juan  |   4    | 
+2018-01-06 16:58:24 +0200 (Full) Car Juan already on map
+2018-01-06 16:58:24 +0200 (Info) Setting mission for Juan. Map
+2018-01-06 16:58:24 +0200 (Info) << set_mission; status=Mission::Statuses::Active
+2018-01-06 16:58:24 +0200 (Info) >> Go! status is Mission::Statuses::Active
+2018-01-06 16:58:24 +0200 (Info) Going!
+2018-01-06 16:58:24 +0200 (Info) Route is...
+2018-01-06 16:58:24 +0200 (Info) R1
+2018-01-06 16:58:24 +0200 (Info) R2
+2018-01-06 16:58:24 +0200 (Info) << go! status=Mission::Statuses::Active

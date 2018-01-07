@@ -6,11 +6,11 @@ class Log
 	module Level
 		BLANK = 0
 		FULL = 1
-		BASIC = 2
+		INFO = 2
 		WARNING = 3
 		ERROR = 4
 
-		DESC = {BLANK:"", FULL:"Full", BASIC:"Basic", WARNING:"Warn", ERROR:"Err"}
+		Desc = {BLANK => "", FULL => "Full", INFO => "Info", WARNING => "Warn", ERROR => "Err"}
 	end
 
 	def self.init(file = nil, to_terminal = true, level = Level::BLANK)
@@ -26,23 +26,35 @@ class Log
 		self.error "Log started with level #{@@level}"
 	end
 
-	def self.full (message) self.write message, Level::FULL; end
+	def self.full (message) self.write_log message, Level::FULL; end
 
-	def self.basic (message) self.write message, Level::BASIC; end
+	def self.info (message) self.write_log message, Level::INFO; end
 
-	def self.warn (message) self.write message, Level::WARNING; end
+	def self.warn (message) self.write_log message, Level::WARNING; end
 
-	def self.error (message) self.write message, Level::ERROR; end
+	def self.error (message) self.write_log message, Level::ERROR; end
 
-	def self.blank (message) self.write message, Level::BLANK; end
+	def self.blank (message) self.write_log message, Level::BLANK; end
 
 private
 
-	def self.write(message, level)
+	def self.write_log message, level
+		if message.respond_to? :each
+			message.each {|m| self.write m, level}
+		else
+			self.write message, level
+		end
+	end
+
+	def self.write message, level
 		self.init if @@log_file.nil?
 		return unless level >= @@level
 
-		m = "#{Time.new} (#{Levels::Desc[level]}) #{message}"
+		if level==Level::BLANK
+			m = message
+		else
+			m = [Time.new, '('+Level::Desc[level]+')', message].join(" ")
+		end
 
 		@@log_file.puts m
 		puts m if @@to_terminal
