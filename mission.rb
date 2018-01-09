@@ -21,8 +21,8 @@ module Mission
 		end
 
 		def next_road
-			if !@leg
-				@leg == 0
+			if @leg.nil?
+				@leg = 0
 			else
 				@leg += 1
 			end
@@ -30,11 +30,11 @@ module Mission
 		end
 
 		def current_road
-			@route[leg]
+			@route[@leg]
 		end
 	end
 
-	def set_mission(_map, _from_junction, _to_junction)
+	def set_mission _map, _from_junction, _to_junction
 		Log.info "Setting mission for #{name}. #{_map.class}"
 		if @status && @status <= Statuses::Active
 			raise ImpossibleActionForStatus.new("This car in on a mission. Abort it first.")
@@ -61,35 +61,39 @@ module Mission
 		# Get route
 		@route = Route.new @map.route_for(@from_junction, @to_junction)
 
-		# Start driving
-		if init_driving
+		Log.full ".. init driving"
+		driver_thread = init_driving
+		if driver_thread
 			@status = Statuses::Driving
 		else
 			raise MissionError.new("Driver error. Could not start driving.")
 		end
 
-		return  # to move down when checked
-		
-		drive_on @route.next_road
-
+		road = @route.next_road
+		Log.full ".. drive on #{road}"
+		drive_on road
+		return driver_thread
 	rescue MissionError => e
 		Log.warn e.message
 	ensure
-		Log.info "<< go! status=#{@status}"
+		Log.full "<< go! status=#{@status}"
 	end
 
-	def approaching(junction)
-		unless status < Statuses::Driving
+	def approaching junction 
+		Log.full ">> approaching #{junction}"
+		unless status <= Statuses::Driving
 			raise ImpossibleActionForStatus.new("'approach' called in #{status}")
 		end
+
 		if junction==to_junction
+			Log.full " .. park_at_next_junction!"
 			park_at_next_junction 
 		else
-			if !Route.current_road.junctions.include?(junction)
+			if !@route.current_road.junctions.include?(junction)
 				raise LostMyWay.new("Junction #{junction} is not on this route.")
 			end
 
-			next_road = Route.next_road
+			next_road = @route.next_road
 			if !next_road.junctions.include?(junction)
 				raise LostMyWay.new("My route does not continue from #{junction} is not on this route.")
 			end
@@ -100,6 +104,8 @@ module Mission
 		Log.warn e.message
 		park_at_next_junction
 		status = Statuses::Aborting
+	ensure
+		Log.full "<< approaching" 
 	end
 
 	def crashed

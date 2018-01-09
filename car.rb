@@ -7,8 +7,8 @@ class Car < MapDynamicObject
 	attr_reader :length, :name, :id
 	alias :id :object_id
 
-	include Mission
 	include Driving
+	include Mission
 
 	def initialize(length, name=nil)
 		@length = length
