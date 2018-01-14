@@ -8,6 +8,7 @@ module Mission
 		class Crashed < Active; end
 		class Finishing < Driving; end
 		class Aborting < Driving; end
+		class Completed < Active; end
 	end
 
 	class MissionError < StandardError; end
@@ -34,7 +35,7 @@ module Mission
 		end
 	end
 
-	def set_mission _map, _from_junction, _to_junction
+	def set_mission _map, _from_junction, _to_junction, and_back=false, recurr=false 
 		Log.info "Setting mission for #{name}. #{_map.class}"
 		if @status && @status <= Statuses::Active
 			raise ImpossibleActionForStatus.new("This car in on a mission. Abort it first.")
@@ -48,21 +49,19 @@ module Mission
 	rescue MissionError => e 
 		Log.warn e.message
 	ensure
-		Log.info "<< set_mission; status=#{@status}"
+		Log.full "<< set_mission; status=#{@status}"
 	end
 
 	def go!
-		Log.info ">> Go! status is #{@status}"
+		Log.full ">> Go! status is #{@status}"
 		unless @status == Statuses::Active
 			raise ImpossibleActionForStatus.new("Cannot 'go!' when #{@status}")
 		end
 
-		Log.info "Going!"
 		# Get route
 		@route = Route.new @map.route_for(@from_junction, @to_junction)
 
-		Log.full ".. init driving"
-		driver_thread = init_driving
+		driver_thread = init_driving(@from_junction)
 		if driver_thread
 			@status = Statuses::Driving
 		else
@@ -108,7 +107,25 @@ module Mission
 		Log.full "<< approaching" 
 	end
 
-	def crashed
+	def report_not_driving status, position
+		if status=='Parked'
+			parked_at position
+		else
+			crashed_at position
+		end
+	end
+
+private 
+
+	def parked_at junction
+		if junction==@to_junction
+			Log.full "#{map_name} had reached its destination"
+			@status = Statuses::Completed
+			stop_driving
+		end
+	end
+
+	def crashed_at position
 		unless status < Statuses::Driving
 			raise ImpossibleActionForStatus.new("Cannot 'crash!' when #{status}")
 		end
@@ -119,6 +136,5 @@ module Mission
 		Log.warn e.message
 	end
 
-private 
 	attr :map, :from_junction, :to_junction, :status, :route
 end
