@@ -54,9 +54,7 @@ module Mission
 
 	def go!
 		Log.full ">> Go! status is #{@status}"
-		unless @status == Statuses::Active
-			raise ImpossibleActionForStatus.new("Cannot 'go!' when #{@status}")
-		end
+		raise ImpossibleActionForStatus.new("Cannot 'go!' when #{@status}") unless @status == Statuses::Active
 
 		# Get route
 		@route = Route.new @map.route_for(@from_junction, @to_junction)
@@ -78,23 +76,23 @@ module Mission
 		Log.full "<< go! status=#{@status}"
 	end
 
-	def approaching junction 
+	def approaching(junction)
 		Log.full ">> approaching #{junction}"
 		unless status <= Statuses::Driving
 			raise ImpossibleActionForStatus.new("'approach' called in #{status}")
 		end
 
-		if junction==to_junction
+		if junction == to_junction
 			Log.full " .. park_at_next_junction!"
 			park_at_next_junction 
 		else
-			if !@route.current_road.junctions.include?(junction)
+			if !@route.current_road.connected?(junction)
 				raise LostMyWay.new("Junction #{junction} is not on this route.")
 			end
 
 			next_road = @route.next_road
-			if !next_road.junctions.include?(junction)
-				raise LostMyWay.new("My route does not continue from #{junction} is not on this route.")
+			if !next_road.connected?(junction)
+				raise LostMyWay.new("Route does not continue from #{junction}")
 			end
 
 			drive_on next_road
@@ -108,7 +106,7 @@ module Mission
 	end
 
 	def report_not_driving status, position
-		if status=='Parked'
+		if status == 'Parked'
 			parked_at position
 		else
 			crashed_at position

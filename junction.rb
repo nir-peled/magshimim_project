@@ -4,12 +4,38 @@ load 'map_static_object.rb'
 class Junction < MapStaticObject
 	attr_reader :outgoing_roads
 
-	def initialize(position)
+	MAX_ROAD_NUM = 4
+
+	def initialize(position, roads=[])
 		super
-		@outgoing_roads = Set.new
+		throw ArgumentError, "Too many roads" if roads.size > MAX_ROAD_NUM
+		@outgoing_roads = Set.new(roads)
 		def @outgoing_roads.to_s
-			self.map {|r| "#{r.to_s}"}.join(',')
+			map {|r| "#{r.to_s}"}.join(',')
 		end
+	end
+
+	def connected?(object)
+		if object.is_a? Road
+			@outgoing_roads.include? object
+		elsif object.is_a? Junction
+			@outgoing_roads.any? { |road| road.connected? object }
+		else
+			throw ArgumentError, "Object must be Road or Junction"
+		end
+	end
+
+	def road_to(other)
+		@outgoing_roads.find { |road| road.opposite_junction(self) == other }
+	end
+
+	def neighbors
+		@outgoing_roads.map {|road| road.opposite_junction self }.compact
+	end
+
+	def cost_to(other)
+		throw ArgumentError, "Junctions are not connected" if !connected?(other)
+		road_to(other).passage_time
 	end
 
 	# for Set operations
@@ -27,6 +53,7 @@ class Junction < MapStaticObject
 	end
 
 	def add_road(road)
+		throw ArgumentError, "Too many roads" if roads.size == MAX_ROAD_NUM
 		@outgoing_roads << road
 	end
 

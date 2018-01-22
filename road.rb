@@ -1,22 +1,22 @@
 load 'map_static_object.rb'
 
 class Road < MapStaticObject
-
 	attr_reader :junctions, :speed_limit
 
-	def initialize(junctions, road_speed_limit=nil)
+	def initialize(junctions, length, road_speed_limit=nil)
 		super nil
+		@length = length
 		@junctions = junctions
 		start_junction.add_road self
 		@speed_limit = road_speed_limit
 	end
 
 	def ==(other)
-		start_junction==other.start_junction && end_junction==other.end_junction
+		start_junction == other.start_junction && end_junction == other.end_junction
 	end
 
 	def eql?(other)
-		start_junction==other.start_junction && end_junction==other.end_junction
+		start_junction == other.start_junction && end_junction == other.end_junction
 	end
 
 	def hash
@@ -41,6 +41,10 @@ class Road < MapStaticObject
 
 	def end_junction
 		@junctions[1]
+	end
+
+	def passage_time(speed=@speed_limit)
+		(@length / speed.to_f).ceil
 	end
 
 	def as_list_line

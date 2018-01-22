@@ -2,7 +2,7 @@ module Driving
 
 	DriverControlLoopDelay = 1
 
-	def init_driving junction
+	def init_driving(junction)
 		@driving_instructions = []
 		@position = junction
 		@distance = 0
@@ -18,10 +18,10 @@ module Driving
 	def drive_on road
 		Log.full ">> drive_on adding #{road} to driving_instructions"
 		@driving_instructions << road
-		@engine = "Running" if @engine=='Parked'
+		@engine = "Running" if @engine == 'Parked'
 	end
 
-	def park_at_next_junction;
+	def park_at_next_junction
 		@driving_instructions << "ParkNext"
 	end
 
@@ -60,25 +60,21 @@ private
 				Log.full "Preparing to leave #{in_junction}"
 				if @driving_instructions.empty?
 					Log.warn "Dunno where to go. Parking at #{in_junction}"
-					@distance = 0
-					@engine = 'Parked'
-					is_status_change = true
+					park_here
 				else
 					next_op = @driving_instructions.shift
 					if next_op.is_a?(Road) && @position.outgoing_roads.include?(next_op)
 						Log.full "Truning to #{next_op}"
 						@position = next_op
 						@distance = 0
-					elsif next_op=='ParkNext'
+					elsif next_op == 'ParkNext'
 						Log.full "Parking at #{in_junction}"
-						@distance = 0
-						@engine = 'Parked'
 						is_status_change = true
+						park_here
 					else
 						Log.warn "Unknown command #{next_op}"
-						@engine = 'Parked'
 						is_status_change = true
-						@distance = 0
+						park_here
 					end
 				end
 			end
@@ -88,9 +84,7 @@ private
 
 	def report_position_and_status is_status_change
 		#@map.update self
-		if is_status_change && @engine!='Running'
-			report_not_driving @engine, @position
-		end
+		report_not_driving @engine, @position if is_status_change && @engine!='Running'
 	end
 
 	def on_road
@@ -98,6 +92,11 @@ private
 	end
 	def in_junction
 		@position.is_a?(Junction) ? @position : nil
+	end
+
+	def park_here
+		@engine = 'Parked'
+		@distance = 0
 	end
 
 end

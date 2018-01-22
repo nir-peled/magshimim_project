@@ -12,14 +12,9 @@ module GeoHelper
 			x==other.x && y==other.y
 		end
 
+		# calculates distance in straight line
 		def distance_to(position)
-			if position.x == x
-				(position.y - y).abs
-			elsif position.y == y
-				(position.x - x).abs
-			else
-				raise ArgumentError, "Unmeasurable distance"
-			end
+			(position.x - x).abs + (position.y - y).abs
 		end
 
 		def to_s
