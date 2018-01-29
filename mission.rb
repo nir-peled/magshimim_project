@@ -35,7 +35,7 @@ module Mission
 		end
 	end
 
-	def set_mission _map, _from_junction, _to_junction, and_back=false, recurr=false 
+	def set_mission(_map, _from_junction, _to_junction, and_back=false, recurr=false) 
 		Log.info "Setting mission for #{name}. #{_map.class}"
 		if @status && @status <= Statuses::Active
 			raise ImpossibleActionForStatus.new("This car in on a mission. Abort it first.")
@@ -81,7 +81,8 @@ module Mission
 		unless status <= Statuses::Driving
 			raise ImpossibleActionForStatus.new("'approach' called in #{status}")
 		end
-
+		
+		Log.info "currnet junction = #{junction}, to_junction = #{to_junction}"
 		if junction == to_junction
 			Log.full " .. park_at_next_junction!"
 			park_at_next_junction 
@@ -116,7 +117,7 @@ module Mission
 private 
 
 	def parked_at junction
-		if junction==@to_junction
+		if junction == @to_junction
 			Log.full "#{map_name} had reached its destination"
 			@status = Statuses::Completed
 			stop_driving

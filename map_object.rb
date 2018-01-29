@@ -20,7 +20,14 @@ class MapObject
 		@picture.draw_rot(x, y, 1, @angle)
 	end
 
-	def to_s() map_name; end
+	def to_s
+		if !map_name.nil?
+			map_name
+		else
+			"#{self.class}::#{position}"
+		end
+	end
+	alias_method :inspect, :to_s
 
 private
 

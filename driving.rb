@@ -1,6 +1,6 @@
-module Driving
+load 'kinetic_parameters.rb'
 
-	DriverControlLoopDelay = 1
+module Driving
 
 	def init_driving(junction)
 		@driving_instructions = []
@@ -15,10 +15,14 @@ module Driving
 		@driver.kill
 	end
 	
-	def drive_on road
+	def drive_on(road)
 		Log.full ">> drive_on adding #{road} to driving_instructions"
 		@driving_instructions << road
-		@engine = "Running" if @engine == 'Parked'
+		
+		if @engine == 'Parked'
+			@speed = KineticParameters::SpeedOnJunction
+			@engine = "Running"
+		end
 	end
 
 	def park_at_next_junction
@@ -34,57 +38,74 @@ private
 
 	def driver_control
 		while true
-			is_status_change = calc_position_and_status
-			report_position_and_status is_status_change
-			sleep DriverControlLoopDelay
+			calc_position_and_status
+			report_position_and_status
+			sleep KineticParameters::DriverControlLoopDelay
 		end
 	end
 
 	def calc_position_and_status
-		Log.full ">> ===== calc_position_and_status. Pos:#{@position}. Distance: #{@distance} Engine: #{@engine}"
-		is_status_change = false
-		@distance += 1 if @engine=='Running'
+		return if @engine != 'Running'
+		Log.full ">> ===== calc_position_and_status. Pos:#{@position}. Speed:#{@speed}. Distance: #{@distance} Engine: #{@engine}"
+		@distance += @speed
 
 		if on_road
-			if @distance == 9
-				Log.full ".. sending approaching #{on_road.end_junction}"
-				approaching on_road.end_junction
-			end
-			if @distance == 10
-				Log.full " .. on 10! Road ended."
-				@position = on_road.end_junction
-				@distance = 0
-			end
-		else
-			if @distance == 2
-				Log.full "Preparing to leave #{in_junction}"
-				if @driving_instructions.empty?
-					Log.warn "Dunno where to go. Parking at #{in_junction}"
-					park_here
-				else
-					next_op = @driving_instructions.shift
-					if next_op.is_a?(Road) && @position.outgoing_roads.include?(next_op)
-						Log.full "Truning to #{next_op}"
-						@position = next_op
-						@distance = 0
-					elsif next_op == 'ParkNext'
-						Log.full "Parking at #{in_junction}"
-						is_status_change = true
-						park_here
-					else
-						Log.warn "Unknown command #{next_op}"
-						is_status_change = true
-						park_here
-					end
-				end
-			end
+			change_position_on_road
+		else # on junction
+			prepare_to_leave_junction if @distance == KineticParameters::JunctionTurnTime
 		end
-		return is_status_change
 	end
 
-	def report_position_and_status is_status_change
-		#@map.update self
-		report_not_driving @engine, @position if is_status_change && @engine!='Running'
+	def change_position_on_road
+		if distance_left_on_road == 0
+			return end_road
+		elsif distance_left_on_road <= @speed
+			# arriving next tick
+			Log.full ".. sending approaching #{on_road.end_junction}"
+			set_speed_by_road
+			approaching on_road.end_junction
+		end
+	end
+
+	def prepare_to_leave_junction
+		next_op = @driving_instructions.shift
+		if next_op.is_a?(Road) && @position.outgoing_roads.include?(next_op)
+			Log.full "Truning to #{next_op}"
+			@position = next_op
+			@distance = 0
+			set_speed_by_road
+			return
+		end
+		
+		if next_op == 'ParkNext'
+			Log.full "Parking at #{in_junction}"	
+		else
+			Log.warn "Unknown command #{next_op}"
+		end
+		park_here	
+	end
+
+	def end_road
+		Log.full "Road ended."
+		@position = on_road.end_junction
+		@speed = KineticParameters::SpeedOnJunction
+		@distance = 0
+		
+		park_here if @driving_instructions.first == "ParkNext"
+	end
+
+	def distance_left_on_road
+		on_road.length - @distance
+	end
+
+	def set_speed_by_road
+		@speed = ( distance_left_on_road >= on_road.speed_limit ? on_road.speed_limit : distance_left_on_road )
+	end
+
+
+	def report_position_and_status
+		# @map.update self
+		# report_not_driving @engine, @position if is_status_change && @engine != 'Running'
 	end
 
 	def on_road
@@ -95,8 +116,10 @@ private
 	end
 
 	def park_here
+		Log.full "Parking here"
 		@engine = 'Parked'
 		@distance = 0
+		@speed = 0
+		report_not_driving @engine, @position
 	end
-
 end

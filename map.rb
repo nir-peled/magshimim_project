@@ -1,4 +1,5 @@
 load 'map_helper.rb'
+load 'route_finder.rb'
 
 class Map
 	include MapHelper
@@ -16,9 +17,9 @@ class Map
 			Log.warn "Junctions not on map"
 			return []
 		end
-		route = RouteFinder.find_shortest_path(from_junction, to_junction).calculate
+		route = RouteFinder.find_shortest_path(from_junction, to_junction)
 	ensure
 		Log.info "Route is..."
-		Log.info route
+		Log.info route.inspect
 	end
 end

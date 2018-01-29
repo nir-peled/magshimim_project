@@ -1,61 +1,73 @@
-2018-01-14 22:03:43 +0200 (Err) Log started with level 0
-2018-01-14 22:03:43 +0200 (Full) Junction J1 added.
-2018-01-14 22:03:43 +0200 (Full) Junction J2 added.
-2018-01-14 22:03:43 +0200 (Full) Road R1 added. Roads: 1 Junctions: 2
-2018-01-14 22:03:43 +0200 (Full) Junction J2 added.
-2018-01-14 22:03:43 +0200 (Full) Junction J3 added.
-2018-01-14 22:03:43 +0200 (Full) Road R2 added. Roads: 2 Junctions: 3
-2018-01-14 22:03:43 +0200 (Full) Car Juan added.
-2018-01-14 22:03:43 +0200 (Full) Car Juan already on map
-2018-01-14 22:03:43 +0200 (Info) Setting mission for Juan. Map
-2018-01-14 22:03:43 +0200 (Full) << set_mission; status=Mission::Statuses::Active
-2018-01-14 22:03:43 +0200 (Full) >> Go! status is Mission::Statuses::Active
-2018-01-14 22:03:43 +0200 (Info) Route is...
-2018-01-14 22:03:43 +0200 (Info) R1
-2018-01-14 22:03:43 +0200 (Info) R2
-2018-01-14 22:03:43 +0200 (Full) .. drive on R1
-2018-01-14 22:03:43 +0200 (Full) >> drive_on adding R1 to driving_instructions
-2018-01-14 22:03:43 +0200 (Full) << go! status=Mission::Statuses::Driving
-2018-01-14 22:03:43 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Distance: 0 Engine: Running
-2018-01-14 22:03:44 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Distance: 1 Engine: Running
-2018-01-14 22:03:44 +0200 (Full) Preparing to leave J1
-2018-01-14 22:03:44 +0200 (Full) Truning to R1
-2018-01-14 22:03:45 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 0 Engine: Running
-2018-01-14 22:03:46 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 1 Engine: Running
-2018-01-14 22:03:47 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 2 Engine: Running
-2018-01-14 22:03:48 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 3 Engine: Running
-2018-01-14 22:03:49 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 4 Engine: Running
-2018-01-14 22:03:50 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 5 Engine: Running
-2018-01-14 22:03:51 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 6 Engine: Running
-2018-01-14 22:03:52 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 7 Engine: Running
-2018-01-14 22:03:53 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 8 Engine: Running
-2018-01-14 22:03:53 +0200 (Full) .. sending approaching J2
-2018-01-14 22:03:53 +0200 (Full) >> approaching J2
-2018-01-14 22:03:53 +0200 (Full) >> drive_on adding R2 to driving_instructions
-2018-01-14 22:03:53 +0200 (Full) << approaching
-2018-01-14 22:03:54 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Distance: 9 Engine: Running
-2018-01-14 22:03:54 +0200 (Full)  .. on 10! Road ended.
-2018-01-14 22:03:55 +0200 (Full) >> ===== calc_position_and_status. Pos:J2. Distance: 0 Engine: Running
-2018-01-14 22:03:56 +0200 (Full) >> ===== calc_position_and_status. Pos:J2. Distance: 1 Engine: Running
-2018-01-14 22:03:56 +0200 (Full) Preparing to leave J2
-2018-01-14 22:03:56 +0200 (Full) Truning to R2
-2018-01-14 22:03:57 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 0 Engine: Running
-2018-01-14 22:03:58 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 1 Engine: Running
-2018-01-14 22:03:59 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 2 Engine: Running
-2018-01-14 22:04:00 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 3 Engine: Running
-2018-01-14 22:04:01 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 4 Engine: Running
-2018-01-14 22:04:02 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 5 Engine: Running
-2018-01-14 22:04:03 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 6 Engine: Running
-2018-01-14 22:04:04 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 7 Engine: Running
-2018-01-14 22:04:05 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 8 Engine: Running
-2018-01-14 22:04:05 +0200 (Full) .. sending approaching J3
-2018-01-14 22:04:05 +0200 (Full) >> approaching J3
-2018-01-14 22:04:05 +0200 (Full)  .. park_at_next_junction!
-2018-01-14 22:04:05 +0200 (Full) << approaching
-2018-01-14 22:04:06 +0200 (Full) >> ===== calc_position_and_status. Pos:R2. Distance: 9 Engine: Running
-2018-01-14 22:04:06 +0200 (Full)  .. on 10! Road ended.
-2018-01-14 22:04:07 +0200 (Full) >> ===== calc_position_and_status. Pos:J3. Distance: 0 Engine: Running
-2018-01-14 22:04:08 +0200 (Full) >> ===== calc_position_and_status. Pos:J3. Distance: 1 Engine: Running
-2018-01-14 22:04:08 +0200 (Full) Preparing to leave J3
-2018-01-14 22:04:08 +0200 (Full) Parking at J3
-2018-01-14 22:04:08 +0200 (Full) C1 had reached its destination
+2018-01-29 18:08:10 +0200 (Err) Log started with level 0
+2018-01-29 18:08:10 +0200 (Full) Junction J1 added.
+2018-01-29 18:08:10 +0200 (Full) Junction J2 added.
+2018-01-29 18:08:10 +0200 (Full) Junction J3 added.
+2018-01-29 18:08:10 +0200 (Full) Road R1 added. Roads: 1 Junctions: 3
+2018-01-29 18:08:10 +0200 (Full) Road R2 added. Roads: 2 Junctions: 3
+2018-01-29 18:08:10 +0200 (Full) Road R3 added. Roads: 3 Junctions: 3
+2018-01-29 18:08:10 +0200 (Full) Road R4 added. Roads: 4 Junctions: 3
+2018-01-29 18:08:10 +0200 (Full) Car Juan added.
+Junctions: 3
+    
+Junctions
+=========
+    name      |   POS    | Roads
+--------------------------
+(0) J1        |  (1,1)   |R1
+(1) J2        |  (1,10)  |R2,R3
+(2) J3        |  (5,10)  |R4
+2018-01-29 18:08:10 +0200 (Full) Roads: 4
+
+Roads
+=========
+name      | From | To | Length | Speed Limit
+--------------------------
+R1        | J1   | J2   | 9.0  | 2    
+R2        | J2   | J1   | 9.0  | 2    
+R3        | J2   | J3   | 4.0  | 1    
+R4        | J3   | J2   | 4.0  | 1    
+
+Cars
+=========
+name  | Length | Status   | Mission |Position
+------------------------------------
+Juan  |   4    | 
+2018-01-29 18:08:10 +0200 (Info) Setting mission for Juan. Map
+2018-01-29 18:08:10 +0200 (Full) << set_mission; status=Mission::Statuses::Active
+2018-01-29 18:08:10 +0200 (Full) >> Go! status is Mission::Statuses::Active
+2018-01-29 18:08:10 +0200 (Info) Route is...
+2018-01-29 18:08:10 +0200 (Info) [R1, R3]
+2018-01-29 18:08:10 +0200 (Full) .. drive on R1
+2018-01-29 18:08:10 +0200 (Full) >> drive_on adding R1 to driving_instructions
+2018-01-29 18:08:10 +0200 (Full) << go! status=Mission::Statuses::Driving
+2018-01-29 18:08:10 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Speed:1. Distance: 0 Engine: Running
+2018-01-29 18:08:10 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Speed:1. Distance: 1 Engine: Running
+2018-01-29 18:08:10 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Speed:1. Distance: 2 Engine: Running
+2018-01-29 18:08:10 +0200 (Full) Truning to R1
+2018-01-29 18:08:10 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:2. Distance: 0 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:2. Distance: 2 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:2. Distance: 4 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:2. Distance: 6 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) .. sending approaching J2
+2018-01-29 18:08:11 +0200 (Full) >> approaching J2
+2018-01-29 18:08:11 +0200 (Info) currnet junction = J2, to_junction = J3
+2018-01-29 18:08:11 +0200 (Full) >> drive_on adding R3 to driving_instructions
+2018-01-29 18:08:11 +0200 (Full) << approaching
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:1.0. Distance: 8 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) Road ended.
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:J2. Speed:1. Distance: 0 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:J2. Speed:1. Distance: 1 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:J2. Speed:1. Distance: 2 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) Truning to R3
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R3. Speed:1. Distance: 0 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R3. Speed:1. Distance: 1 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) >> ===== calc_position_and_status. Pos:R3. Speed:1. Distance: 2 Engine: Running
+2018-01-29 18:08:11 +0200 (Full) .. sending approaching J3
+2018-01-29 18:08:11 +0200 (Full) >> approaching J3
+2018-01-29 18:08:11 +0200 (Info) currnet junction = J3, to_junction = J3
+2018-01-29 18:08:11 +0200 (Full)  .. park_at_next_junction!
+2018-01-29 18:08:11 +0200 (Full) << approaching
+2018-01-29 18:08:12 +0200 (Full) >> ===== calc_position_and_status. Pos:R3. Speed:1. Distance: 3 Engine: Running
+2018-01-29 18:08:12 +0200 (Full) Road ended.
+2018-01-29 18:08:12 +0200 (Full) Parking here
+2018-01-29 18:08:12 +0200 (Full) C1 had reached its destination

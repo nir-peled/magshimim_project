@@ -64,7 +64,6 @@ module MapHelper
 	def junctions_count; junctions.length end
 
 	def add_mission (car, from_junction, to_junction)
-		add_car car
 		car.set_mission self, from_junction, to_junction
 	end
 
@@ -91,10 +90,10 @@ module MapHelper
 	end
 
 	def add_road(road)
-		raise MapError.new "Road already on map" if roads.include? road
+		raise MapError.new "Road #{road.junctions.to_s} already on map" if roads.include? road
 
-		add_junction road.start_junction
-		add_junction road.end_junction
+		# self_add_junction road.start_junction
+		# self_add_junction road.end_junction
 
 		roads << road
 		road.map_name = "R#{roads_count}"
@@ -121,12 +120,19 @@ module MapHelper
 		""
 	end
 
+	def add_junction(position)
+		throw ArgumentError, "Position has a Junction already" if junctions.any? { |j| j.position == position }
+		junction = Junction.new position, self
+		self_add_junction junction
+		junction
+	end
+
 private
 	attr :cars
 	attr :roads
 	attr :junctions
 
-	def add_junction(junction)
+	def self_add_junction(junction)
 		junctions << junction
 		junction.map_name = "J#{junctions_count}"
 		Log.full "Junction #{junction.map_name} added."

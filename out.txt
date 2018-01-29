@@ -1,0 +1,58 @@
+Start!
+2018-01-29 17:21:05 +0200 (Err) Log started with level 0
+2018-01-29 17:21:05 +0200 (Full) Junction J1 added.
+2018-01-29 17:21:05 +0200 (Full) Junction J2 added.
+2018-01-29 17:21:05 +0200 (Full) Junction J3 added.
+2018-01-29 17:21:05 +0200 (Full) Road R1 added. Roads: 1 Junctions: 3
+2018-01-29 17:21:05 +0200 (Full) Road R2 added. Roads: 2 Junctions: 3
+2018-01-29 17:21:05 +0200 (Full) Road R3 added. Roads: 3 Junctions: 3
+2018-01-29 17:21:05 +0200 (Full) Road R4 added. Roads: 4 Junctions: 3
+2018-01-29 17:21:05 +0200 (Full) Car Juan added.
+Junctions: 3
+    
+Junctions
+=========
+    name      |   POS    | Roads
+--------------------------
+(0) J1        |  (1,1)   |R1
+(1) J2        |  (1,5)   |R2,R3
+(2) J3        |  (6,5)   |R4
+2018-01-29 17:21:05 +0200 (Full) Roads: 4
+
+Roads
+=========
+name      | From | To
+--------------------------
+R1        | J1   | J2   
+R2        | J2   | J1   
+R3        | J2   | J3   
+R4        | J3   | J2   
+
+Cars
+=========
+name  | Length | Status   | Mission |Position
+------------------------------------
+Juan  |   4    | 
+2018-01-29 17:21:05 +0200 (Info) Setting mission for Juan. Map
+2018-01-29 17:21:05 +0200 (Full) << set_mission; status=Mission::Statuses::Active
+2018-01-29 17:21:05 +0200 (Full) >> Go! status is Mission::Statuses::Active
+2018-01-29 17:21:05 +0200 (Info) Route is...
+2018-01-29 17:21:05 +0200 (Info) R1
+2018-01-29 17:21:05 +0200 (Info) R3
+2018-01-29 17:21:05 +0200 (Full) .. drive on R1
+2018-01-29 17:21:05 +0200 (Full) >> drive_on adding R1 to driving_instructions
+2018-01-29 17:21:05 +0200 (Full) << go! status=Mission::Statuses::Driving
+2018-01-29 17:21:05 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Speed:1. Distance: 1 Engine: Running
+2018-01-29 17:21:05 +0200 (Full) >> ===== calc_position_and_status. Pos:J1. Speed:1. Distance: 2 Engine: Running
+2018-01-29 17:21:05 +0200 (Full) Truning to R1
+2018-01-29 17:21:05 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:2. Distance: 2 Engine: Running
+2018-01-29 17:21:05 +0200 (Full) .. sending approaching J2
+2018-01-29 17:21:05 +0200 (Full) >> approaching J2
+2018-01-29 17:21:05 +0200 (Info) currnet junction = J2, to_junction = J3
+2018-01-29 17:21:05 +0200 (Full) >> drive_on adding R3 to driving_instructions
+2018-01-29 17:21:05 +0200 (Full) << approaching
+2018-01-29 17:21:05 +0200 (Full) >> ===== calc_position_and_status. Pos:R1. Speed:2. Distance: 4 Engine: Running
+2018-01-29 17:21:05 +0200 (Full) .. sending approaching J2
+2018-01-29 17:21:05 +0200 (Full) >> approaching J2
+2018-01-29 17:21:05 +0200 (Info) currnet junction = J2, to_junction = J3
+2018-01-29 17:21:05 +0200 (Full) << approaching

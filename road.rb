@@ -1,18 +1,23 @@
 load 'map_static_object.rb'
 
 class Road < MapStaticObject
-	attr_reader :junctions, :speed_limit
+	attr_reader :junctions, :speed_limit, :length
+
+	module SpeedLimit
+		MaxSpeedLimit = 3
+		Normal = 2
+		Slow = 1
+	end
 
 	def initialize(junctions, length, road_speed_limit=nil)
 		super nil
 		@length = length
 		@junctions = junctions
-		start_junction.add_road self
 		@speed_limit = road_speed_limit
 	end
 
 	def ==(other)
-		start_junction == other.start_junction && end_junction == other.end_junction
+		other.is_a?(Road) && start_junction == other.start_junction && end_junction == other.end_junction
 	end
 
 	def eql?(other)
@@ -48,10 +53,15 @@ class Road < MapStaticObject
 	end
 
 	def as_list_line
-		"#{to_s.ljust(10,' ')}| #{start_junction.to_s.ljust(5,' ')}| #{end_junction.to_s.ljust(5,' ')}"
+		name_part = to_s.ljust(10,' ')
+		start_part = start_junction.to_s.ljust(5,' ')
+		end_part = end_junction.to_s.ljust(5,' ')
+		length_part = @length.to_s.ljust(5,' ')
+		speed_part = @speed_limit.to_s.ljust(5,' ')
+		"#{name_part}| #{start_part}| #{end_part}| #{length_part}| #{speed_part}"
 	end
 	
 	def Road.list_header
-		"\nRoads\n=========\nname      | From | To\n--------------------------"
+		"\nRoads\n=========\nname      | From | To | Length | Speed Limit\n--------------------------"
 	end
 end

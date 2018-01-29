@@ -14,13 +14,15 @@ module GeoHelper
 
 		# calculates distance in straight line
 		def distance_to(position)
-			(position.x - x).abs + (position.y - y).abs
+			Math.sqrt((position.x - x).abs ** 2 + (position.y - y).abs ** 2)
 		end
 
 		def to_s
-			"#{x},#{y}"
+			"(#{x},#{y})"
 		end
 	end
 
-
+	def distance_to(other)
+		other.position.distance_to self.position
+	end
 end
