@@ -4,7 +4,7 @@ load 'junction.rb'
 load 'road.rb'
 load 'car.rb'
 
-class MapSecondTester < Tester
+class AccelTester < Tester
 
 	def self.run_test
 		puts "Start!"
@@ -16,7 +16,7 @@ class MapSecondTester < Tester
 		j3 = m.add_junction GeoHelper::Position.new(5,10)
 
 		run_action {j1.connect_to j2, Road::SpeedLimit::MaxSpeedLimit}
-		run_action {j2.connect_to j3, Road::SpeedLimit::Slow}
+		run_action {j2.connect_to j3, Road::SpeedLimit::Normal}
 
 		c1 = Car.new(4, 'Juan')
 		m.add_car(c1)
@@ -29,4 +29,4 @@ class MapSecondTester < Tester
 	end
 end
 
-MapSecondTester.run_test
+AccelTester.run_test

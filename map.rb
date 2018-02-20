@@ -18,8 +18,5 @@ class Map
 			return []
 		end
 		route = RouteFinder.find_shortest_path(from_junction, to_junction)
-	ensure
-		Log.info "Route is..."
-		Log.info route.inspect
 	end
 end

@@ -5,12 +5,10 @@ require_relative "player.rb"
 
 class Simulator < Gosu::Window
 	WIDTH, HEIGHT = 640, 480
-	BORDER_SIZE = 0
 	def initialize
 		super WIDTH, HEIGHT
 		self.caption = "Tutorial Game"
 		@map = Gosu::Image.new("./media/space.png", :tileable => true)
-		@player = Player.new(WIDTH / 2.0, HEIGHT / 2.0)
 	end
 
 	def update

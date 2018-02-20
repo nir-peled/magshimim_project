@@ -50,11 +50,11 @@ class Junction < MapStaticObject
 
 	# for Set operations
 	def ==(other)
-		self.position==other.position
+		self.position == other.position
 	end
 
 	def eql?(other)
-		self.position==other.position
+		self.position == other.position
 	end
 
 	# for Set operations

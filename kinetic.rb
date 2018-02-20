@@ -4,7 +4,7 @@ module Kinetic
 	JunctionTurnTime = 3
 	SpeedOnJunction = 1
 	SpeedDelta = 0.01
-	JunctionEnterSpeed = 2
+	JunctionEnterSpeed = 1
 
 	module Accel
 		EmergencyBreak = -2
@@ -14,11 +14,21 @@ module Kinetic
 		FastAccel = 2
 	end
 
-	def self.speed_lower_than(speed, limit)
+	def self.up_accel(accel)
+		accels = Accel.constants
+		accel_index = accels.index {|const| Accel.const_get(const) == accel }
+		if accel == Accel.const_get(accels.last)
+			accel
+		else
+			Accel.const_get accels[accel_index + 1]
+		end
+	end
+
+	def self.speed_lower(speed, limit)
 		limit - speed > SpeedDelta
 	end
 
-	def self.speed_close_to(speed, limit)
+	def self.speed_close(speed, limit)
 		(limit - speed).abs < SpeedDelta
 	end
 end
