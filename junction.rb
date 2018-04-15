@@ -6,15 +6,13 @@ class Junction < MapStaticObject
 
 	MAX_ROAD_NUM = 4
 
-	def initialize(position, the_map, roads=[])
-		super position
+	def initialize(position, map, roads=[], opt={})
+		super position, image:opt[:image]
 		throw ArgumentError, "Too many roads" if roads.size > MAX_ROAD_NUM
 
-		@map = the_map
+		@map = map
 		@outgoing_roads = Set.new(roads)
-		def @outgoing_roads.to_s
-			map(&:to_s).join(',')
-		end
+		def @outgoing_roads.to_s; map(&:to_s).join(','); end
 	end
 
 	def connect_to(other, speed_limit=nil)
@@ -64,7 +62,7 @@ class Junction < MapStaticObject
 
 	def add_road(road)
 		throw ArgumentError, "Too many roads" if @outgoing_roads.size == MAX_ROAD_NUM
-		@map.add_road road
+		# @map.add_road road
 		@outgoing_roads << road
 	end
 

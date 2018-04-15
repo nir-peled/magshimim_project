@@ -1,5 +1,7 @@
 require 'set'
-require_relative 'log'
+load "junction.rb"
+load "road.rb"
+load "car.rb"
 
 module MapHelper
 
@@ -19,12 +21,18 @@ module MapHelper
 		car.set_mission self, from_junction, to_junction
 	end
 
+	def create_car(position, length=0)
+		car = Car.new position, length, image:ObjectImage.get_image(:car)
+		add_car car
+	end
+
 	def add_car(car)
 		if cars.add?(car)
 			car.map_name = "C#{cars_count}"
 		else
 			Log.warn "Car #{car} already on map"
 		end
+		car
 	end
 
 	def get_car(name:nil, id:nil)
@@ -72,9 +80,35 @@ module MapHelper
 
 	def add_junction(position)
 		throw ArgumentError, "Position has a Junction already" if junctions.any? { |j| j.position == position }
-		junction = Junction.new position, self
+		junction = Junction.new position, self, [], image:ObjectImage.get_image(:junction)
 		self_add_junction junction
 		junction
+	end
+
+	def connect_junctions(start_junction, end_junction, opt={})
+		create_road start_junction, end_junction, opt[:speed_limit]
+		create_road end_junction, start_junction, opt[:speed_limit] if opt[:two_way]
+	end
+
+	def create_road(start_junction, end_junction, speed_limit=nil)
+		road = Road.new [start_junction, end_junction], start_junction.distance_to(end_junction),
+		 road_speed_limit:speed_limit
+		add_road road
+		start_junction.add_road road
+	end
+
+	def update_distance_on_road(car, road, distance)
+		car.move road.start_junction.position
+		car.push road.direction, distance
+		car.set_angle road.angle
+	end
+
+	def start_cars
+		cars.each &:go!
+	end
+
+	def stop_cars
+		cars.each &:force_finish
 	end
 
 private
@@ -86,6 +120,4 @@ private
 		junctions << junction
 		junction.map_name = "J#{junctions_count}"
 	end
-
-
 end

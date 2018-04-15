@@ -35,8 +35,8 @@ module Mission
 		end
 
 		def print_route
-			str = @route.first.start_junction + ","
-			str += @route.map {|road| road + "," + road.end_junction }.inject(:+)
+			str = @route.first.start_junction.to_s + ","
+			str += @route.map {|road| road.to_s + "," + road.end_junction.to_s }.join(",")
 			Log.full str
 		end
 	end
@@ -79,6 +79,11 @@ module Mission
 		Log.warn e.message
 	end
 
+	def force_finish
+		status = Statuses::Inactive
+		stop_driving
+	end
+
 	def approaching(junction)
 		Log.full ">> approaching #{junction}"
 		unless status <= Statuses::Driving
@@ -110,7 +115,7 @@ module Mission
 	end
 
 	def report_not_driving status, position
-		if status == :Parked
+		if status == Statuses::Parked
 			parked_at position
 		else
 			crashed_at position

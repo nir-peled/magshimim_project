@@ -2,19 +2,22 @@ class Log
 	@@log_file = nil
 	@@to_terminal = true
 	@@level = nil
+	@@include_time = true
 
 	module Level
 		BLANK = 0
 		DEBUG = 1
 		FULL = 2
 		INFO = 3
-		WARNING = 4
+		WARN = 4
 		ERROR = 5
 
-		Desc = {BLANK => "", DEBUG => "Debug", FULL => "Full", INFO => "Info", WARNING => "Warn", ERROR => "Err"}
+		Desc = {BLANK => "", DEBUG => "Debug", FULL => "Full", INFO => "Info", WARN => "Warn", ERROR => "Err"}
 	end
 	Level.constants.each { |const|
-		define_method(const.downcase) { self.write_log message, Level.const_get(const) } if const != :Blank
+		define_singleton_method(const.downcase) { |message|
+			self.write_log message, Level.const_get(const)
+		} if const != :Blank && const != :Desc
 	}
 
 	def self.init(file = nil, to_terminal = true, level = Level::BLANK)
@@ -31,16 +34,7 @@ class Log
 		self.error "Log started with level #{@@level}"
 	end
 
-	def self.full (message) self.write_log message, Level::FULL; end
-	def self.info (message) self.write_log message, Level::INFO; end
-	def self.warn (message) self.write_log message, Level::WARNING; end
-	def self.error (message) self.write_log message, Level::ERROR; end
-	def self.blank (message) self.write_log message, Level::BLANK; end
-
-	def self.debug (message) self.write_log message, Level::DEBUG; end
-
 	def self.include_time; @@include_time; end
-
 	def self.include_time=(flag); @@include_time = flag; end
 
 private
@@ -57,16 +51,15 @@ private
 		self.init if @@log_file.nil?
 		return unless level >= @@level
 
-		if level==Level::BLANK
+		if level == Level::BLANK
 			m = message
 		else
 			m = [Time.new, '('+Level::Desc[level]+')', message]
-			m.shift if !@include_time
+			m.shift if !@@include_time
 			m = m.join(" ")
 		end
 
 		@@log_file.puts m
 		puts m if @@to_terminal
 	end
-
 end

@@ -1,55 +1,61 @@
-(Err) Log started with level 0
+2018-04-13 14:22:58 +0300 (Err) Log started with level 0
 Junctions: 3
     
 Junctions
 =========
     name      |   POS    | Roads
 --------------------------
-(0) J1        |  (1,1)   |R1
-(1) J2        |  (1,10)  |R2,R3
-(2) J3        |  (5,10)  |R4
-(Full) Roads: 4
+(0) J1        | (10,10)  |R1
+(1) J2        | (15,80)  |R2
+(2) J3        | (50,100) |
+2018-04-13 14:22:58 +0300 (Full) Roads: 2
 
 Roads
 =========
 name      | From | To | Length | Speed Limit
 --------------------------
-R1        | J1   | J2   | 9.0  | 3    
-R2        | J2   | J1   | 9.0  | 3    
-R3        | J2   | J3   | 4.0  | 2    
-R4        | J3   | J2   | 4.0  | 2    
+R1        | J1   | J2   | 70.178344238091| 3    
+R2        | J2   | J3   | 40.311288741492746| 2    
 
 Cars
 =========
 name  | Length | Status   | Mission |Position
 ------------------------------------
-Juan  |   4    | 
-(Full) >> Go! status is Mission::Statuses::Active
-(Full) .. drive on R1
-(Full) Starting to drive
-(Full) >> ===== C1: Pos:J1. Speed:0. Distance: 3
-(Full) Truning to R1
-(Full) >> ===== C1: Pos:R1. Speed:0. Distance: 0
-(Full) >> ===== C1: Pos:R1. Speed:1. Distance: 0
-(Full) >> ===== C1: Pos:R1. Speed:2. Distance: 1
-(Full) >> ===== C1: Pos:R1. Speed:3. Distance: 3
-(Full) >> ===== C1: Pos:R1. Speed:2. Distance: 6
-(Full) >> approaching J2
-(Info) currnet junction = J2, to_junction = J3
-(Full) << approaching
-(Full) >> ===== C1: Pos:R1. Speed:1. Distance: 8
-(Full) Road ended.
-(Full) >> ===== C1: Pos:J2. Speed:1. Distance: 0
-(Full) >> ===== C1: Pos:J2. Speed:1. Distance: 1
-(Full) >> ===== C1: Pos:J2. Speed:1. Distance: 2
-(Full) Truning to R3
-(Full) >> ===== C1: Pos:R3. Speed:1. Distance: 0
-(Full) >> ===== C1: Pos:R3. Speed:2. Distance: 1
-(Full) >> approaching J3
-(Info) currnet junction = J3, to_junction = J3
-(Full)  .. park_at_next_junction!
-(Full) << approaching
-(Full) >> ===== C1: Pos:R3. Speed:1. Distance: 3
-(Full) Road ended.
-(Full) Parking here
-(Full) C1 had reached its destination
+C1    |   5    | Mission::Statuses::Active
+2018-04-13 14:22:58 +0300 (Full) >> Go! status is Mission::Statuses::Active
+2018-04-13 14:22:58 +0300 (Full) route is: 
+2018-04-13 14:22:58 +0300 (Full) J1,R1,J2,R2,J3
+2018-04-13 14:22:58 +0300 (Full) .. drive on R1
+2018-04-13 14:22:58 +0300 (Full) Starting to drive
+2018-04-13 14:22:58 +0300 (Full) >> ===== C1: Pos:J1. Speed:0. Distance: 3.0 (0)
+2018-04-13 14:22:58 +0300 (Full) Truning to R1
+2018-04-13 14:22:58 +0300 (Full) >> ===== C1: Pos:R1. Speed:0.0. Distance: 0.0 (70.178344238091)
+2018-04-13 14:22:58 +0300 (Full) >> ===== C1: Pos:R1. Speed:2.0. Distance: 2.0 (68.178344238091)
+2018-04-13 14:22:58 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 5.0 (65.178344238091)
+2018-04-13 14:22:58 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 8.0 (62.178344238091)
+2018-04-13 14:22:58 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 11.0 (59.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 14.0 (56.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 17.0 (53.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 20.0 (50.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 23.0 (47.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 26.0 (44.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 29.0 (41.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 32.0 (38.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 35.0 (35.178344238091)
+2018-04-13 14:22:59 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 38.0 (32.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 41.0 (29.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 44.0 (26.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 47.0 (23.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 50.0 (20.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 53.0 (17.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 56.0 (14.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 59.0 (11.178344238091)
+2018-04-13 14:23:00 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 62.0 (8.178344238091)
+2018-04-13 14:23:01 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 65.0 (5.178344238091)
+2018-04-13 14:23:01 +0300 (Full) >> ===== C1: Pos:R1. Speed:2.0. Distance: 67.0 (3.1783442380910003)
+2018-04-13 14:23:01 +0300 (Full) >> ===== C1: Pos:R1. Speed:1.0. Distance: 68.0 (2.1783442380910003)
+2018-04-13 14:23:01 +0300 (Full) >> approaching J2
+2018-04-13 14:23:01 +0300 (Info) currnet junction = J2, to_junction = J3
+2018-04-13 14:23:01 +0300 (Full) << approaching
+2018-04-13 14:23:01 +0300 (Full) >> ===== C1: Pos:R1. Speed:3.0. Distance: 71.0 (-0.8216557619089997)
+2018-04-13 14:23:01 +0300 (Warn) Car Crashed: enters junction too fast

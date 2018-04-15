@@ -1,13 +1,15 @@
 load 'kinetic.rb'
 
 module Driving
-
 	def init_driving(junction)
 		@driving_instructions = []
-		@position = junction
-		@distance = @speed_before_junction = @speed = @accel = 0
+		@driving_position = junction
+		@distance = 0.0
+		@speed =  Kinetic::Speed.new(0.0)
+		@speed_before_junction = Kinetic::Speed.new(0.0)
 		@engine = :Parked
 		@driver = Thread.new { driver_control }
+		
 		return @driver
 	end
 
@@ -30,15 +32,6 @@ module Driving
 	end
 
 private
-
-	def driver_control
-		while true
-			calc_position_and_status
-			report_position_and_status
-			sleep Kinetic::DriverControlLoopDelay
-		end
-	end
-
 	def start_driving
 		Log.full "Starting to drive"
 		@speed = 0
@@ -46,57 +39,84 @@ private
 		@engine = :Running
 	end
 
-	def calc_position_and_status
+	def driver_control
+		while true
+			calc_driving_position_and_status
+			report_driving_position_and_status
+			sleep Kinetic::DriverControlLoopDelay
+		end
+	rescue StandardError => e
+		Log.error "#{map_name} > #{e.class}: #{e.message}"
+		crash_car e.message
+	rescue Exception => e
+		Log.error "#{map_name} > #{e.class}: #{e.message}"
+		raise e
+	end
+
+	def calc_driving_position_and_status
 		return if @engine != :Running
-		Log.full ">> ===== #{map_name}: Pos:#{@position}. Speed:#{@speed}. Distance: #{@distance}"
 		@distance += @speed
+		Log.full ">> ===== #{map_name}: Pos:#{@driving_position}. Speed:#{@speed}. Distance: #{@distance} (#{distance_left_on_road})"
 
 		if on_road
-			change_position_on_road
+			change_driving_position_on_road
 		else # on junction
 			prepare_to_leave_junction if @distance == Kinetic::JunctionTurnTime
 		end
 	end
 
-	def change_position_on_road
-		crash_car "Moved over junction" if distance_left_on_road < 0
-		if distance_left_on_road == 0
+	# compare distance by delta
+	def change_driving_position_on_road
+		if distance_left_on_road < Kinetic::JunctionRadius
+			crash_car "enters junction too fast" if @speed > Kinetic::MaxJunctionEnterSpeed
 			end_road
 		else
-			calc_new_accel_and_speed
+			@speed += calc_new_accel
 			approaching on_road.end_junction if distance_left_on_road <= @speed
 		end
-		
 	end
 
-	def calc_new_accel_and_speed
-		if Kinetic.speed_lower(distance_left_on_road, @speed) || Kinetic.speed_close(distance_left_on_road, @speed)
-			# arriving next turn
-			if Kinetic.speed_lower Kinetic::JunctionEnterSpeed, @speed
-				@accel = lower_speed_to Kinetic::JunctionEnterSpeed
-			elsif Kinetic.speed_lower distance_left_on_road, @speed
-				@accel = lower_speed_to distance_left_on_road
+	def calc_new_accel
+		a = 0.0
+		gap = deccel_distance_gap
+		if gap >= 0
+			if gap > Kinetic::JunctionApproachDistance
+				a = accelerate_to on_road.speed_limit
 			else
-				@accel = Kinetic::Accel::NoAccel
+				if @speed > Kinetic::MaxJunctionEnterSpeed
+					a = Kinetic::Accel::SlowNormal
+				else
+					a = Kinetic::Accel::NoAccel
+				end
 			end
-
-			@accel = Kinetic.up_accel(@accel) if Kinetic.speed_lower @speed + @accel, distance_left_on_road 
 		else
-			if Kinetic.speed_lower @speed, on_road.speed_limit
-				@accel = Kinetic::Accel::Normal
-			else
-				@accel = Kinetic::Accel::NoAccel 
-			end
+			a = Kinetic::Accel::SlowFast
 		end
-		
-		@speed += @accel
+		a
+	ensure
+		# Log.debug "calc_new_accel: #{a}."
+	end
+
+	def deccel_distance_gap
+		distance_left_on_road - Kinetic.deccel_distance_for_approach(@speed)
+	end
+
+	def accelerate_to(target_speed)
+		delta = target_speed - @speed
+		if delta >= Kinetic::Accel::FastAccel
+			Kinetic::Accel::FastAccel
+		elsif delta >= Kinetic::Accel::NormalAccel
+			Kinetic::Accel::NormalAccel
+		else
+			Kinetic::Accel::NoAccel
+		end
 	end
 
 	def prepare_to_leave_junction
 		next_op = @driving_instructions.shift
-		if next_op.is_a?(Road) && @position.outgoing_roads.include?(next_op)
+		if next_op.is_a?(Road) && @driving_position.outgoing_roads.include?(next_op)
 			Log.full "Truning to #{next_op}"
-			@position = next_op
+			@driving_position = next_op
 			@distance = 0
 			@speed = @speed_before_junction
 			return
@@ -112,9 +132,9 @@ private
 
 	def end_road
 		Log.full "Road ended."
-		crash_car "Entered Junction with a high speed" if @speed > Kinetic::JunctionEnterSpeed
+		crash_car "Entered Junction with a high speed" if @speed > Kinetic::MaxJunctionEnterSpeed
 		@speed_before_junction = @speed
-		@position = on_road.end_junction
+		@driving_position = on_road.end_junction
 		@speed = Kinetic::SpeedOnJunction
 		@distance = 0
 		
@@ -122,7 +142,7 @@ private
 	end
 
 	def distance_left_on_road
-		on_road ? on_road.length - @distance : 0
+		on_road ? ( on_road.length - @distance ) : 0
 	end
 
 	# def set_speed_by_road
@@ -133,23 +153,24 @@ private
 		@crash_message = message
 		Log.warn "Car Crashed: #{message}"
 		@engine = :Crashed
-		report_not_driving @engine, @position
+		report_not_driving @engine, @driving_position
 	end
 
 	def lower_speed_to(speed_limit)
-		accel = @speed + Kinetic::Accel::SlowDown <= speed_limit ? Kinetic::Accel::SlowDown : Kinetic::Accel::EmergencyBreak
+		accel = @speed + Kinetic::Accel::SlowDown <= speed_limit ?
+			Kinetic::Accel::SlowDown : Kinetic::Accel::EmergencyBreak
 	end
 
-	def report_position_and_status
-		# @map.update self
-		# report_not_driving @engine, @position if is_status_change && @engine != :Running
+	def report_driving_position_and_status
+		@map.update_distance_on_road self, on_road, @distance if on_road
+		# report_not_driving @engine, @driving_position if is_status_change && @engine != :Running
 	end
 
 	def on_road
-		@position.is_a?(Road) ? @position : nil
+		@driving_position.is_a?(Road) ? @driving_position : nil
 	end
 	def in_junction
-		@position.is_a?(Junction) ? @position : nil
+		@driving_position.is_a?(Junction) ? @driving_position : nil
 	end
 
 	def park_here
@@ -157,6 +178,6 @@ private
 		@engine = :Parked
 		@distance = 0
 		@speed = 0
-		report_not_driving @engine, @position
+		report_not_driving @engine, @driving_position
 	end
 end

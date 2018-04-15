@@ -1,23 +1,28 @@
 load 'geo_helper.rb'
+load 'object_image.rb'
 
 class MapObject
-
+	@@id_counter = -1
 	include GeoHelper
 	
-	attr_reader :position
+	attr_reader :position, :id, :angle
 	attr_accessor :map_name
 
-	def initialize(position, picture=nil,  op={})
+	def initialize(position, opt={})
+		@id = @@id_counter += 1
 		@position = position
-		@picture = Gosu::Image.new(picture) if !picture.nil?
+		@image_type = opt[:image]
+		@map_name = opt[:map_name]
+		@angle = opt[:angle] ? opt[:angle] : 0
 	end
 
-	def picture
-		@picture.dup
+	def draw(layer=1)
+		# ObjectImage.draw_image type, position.x, position.y, layer, @angle
+		@image_type.draw_on_map(position.x, position.y, layer, @angle)
 	end
 
-	def draw
-		@picture.draw_rot(x, y, 1, @angle)
+	def type
+		!@image_type.nil? ? @image_type : self.class.to_s.downcase.to_sym
 	end
 
 	def to_s
@@ -28,19 +33,4 @@ class MapObject
 		end
 	end
 	alias_method :inspect, :to_s
-
-private
-
-	def map_bound_pos(pos, bound)
-		if @map_bound
-			if pos > 0
-				[pos, bound - Simulator::BORDER_SIZE].min
-			else
-				Simulator::BORDER_SIZE
-			end
-		else
-			pos % bound
-		end
-	end
-
 end

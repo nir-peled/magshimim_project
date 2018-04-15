@@ -1,19 +1,24 @@
 load 'map_static_object.rb'
+load 'kinetic.rb'
 
 class Road < MapStaticObject
 	attr_reader :junctions, :speed_limit, :length
 
+	ROAD_COLOR = Gosu::Color::AQUA
+
 	module SpeedLimit
-		MaxSpeedLimit = 3
-		Normal = 2
-		Slow = 1
+		MaxSpeedLimit = Kinetic::Speed.new(3)
+		Normal = Kinetic::Speed.new(2)
+		Slow = Kinetic::Speed.new(1)
 	end
 
-	def initialize(junctions, length, road_speed_limit=nil)
-		super nil
+	def initialize(junctions, length, opt={})
 		@length = length
 		@junctions = junctions
-		@speed_limit = road_speed_limit
+		@speed_limit = opt[:road_speed_limit]
+		my_center = GeoHelper.middle_point(*junctions.map(&:position))
+		angle = Gosu.angle(*start_junction.position, *end_junction.position)
+		super my_center, angle:angle
 	end
 
 	def ==(other)
@@ -21,11 +26,15 @@ class Road < MapStaticObject
 	end
 
 	def eql?(other)
-		start_junction == other.start_junction && end_junction == other.end_junction
+		self == other
 	end
 
 	def hash
 		"#{start_junction.hash}0000#{end_junction.hash}".to_i
+	end
+
+	def draw
+		ObjectImage.draw_line(start_junction.position, end_junction.position, ROAD_COLOR)
 	end
 
 	def connected?(junction)
@@ -50,6 +59,19 @@ class Road < MapStaticObject
 
 	def passage_time(speed=@speed_limit)
 		(@length / speed.to_f).ceil
+	end
+
+	# returns a point on the unit circle to match the direction
+	# of the road
+	def direction
+		point_x = end_junction.position.x - start_junction.position.x
+		point_y = end_junction.position.y - start_junction.position.y
+		[point_x / @length, point_y / @length]
+	end
+
+	def angle
+		args = @junctions.flat_map {|j| j.position.to_a }
+		Gosu.angle(*args)
 	end
 
 	def as_list_line

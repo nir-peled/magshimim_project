@@ -1,0 +1,38 @@
+{
+	"media" : {
+		"media_dir" : "../media/",
+		"image_files" : {
+			"background" : "background.png",
+			"junction" : "junction.png",
+			"car" : "car.png",
+			"road" : null
+		}
+	},
+
+	"window" : {
+		"window_width" : 560,
+		"window_height" : 640,
+		"window_caption" : "Simulator"
+	},
+
+	"map" : {
+		"junctions" : [
+			{"id" : "J1", "x" : 10, "y" : 10},
+			{"id" : "J2", "x" : 15, "y" : 80},
+			{"id" : "J3", "x" : 50, "y" : 100}
+		],
+
+		"roads" : [
+			{"start_j" : "J1", "end_j" : "J2", "speed_limit" : 3},
+			{"start_j" : "J2", "end_j" : "J3", "speed_limit" : 2}
+		],
+
+		"cars" : [
+			{"start_j" : "J1", "end_j" : "J3", "length" : 5}
+		]
+	},
+
+	"constants" : {
+		"drawing_multiplier" : 5
+	}
+}

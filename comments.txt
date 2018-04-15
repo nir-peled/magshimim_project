@@ -1,0 +1,8 @@
+Driving:
+	crash_car needs to use exceptions
+	calc_new_accel_and_speed:
+		rewrite with operator override
+		complete rewrite
+		add comments
+
+		

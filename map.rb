@@ -5,11 +5,19 @@ class Map
 	include MapHelper
 	# include RouteFinder
 
-	def initialize(args=nil)
+	def initialize(map_image)
+		@image = map_image
 		init
 	end
 
 	def traffic(road)
+	end
+
+	def draw
+		@image.draw(0, 0, 0)
+		junctions.each &:draw
+		roads.each &:draw
+		cars.each &:draw
 	end
 
 	def route_for(from_junction, to_junction)

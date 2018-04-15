@@ -15,11 +15,10 @@ class AccelTester < Tester
 		j2 = m.add_junction GeoHelper::Position.new(1,10)
 		j3 = m.add_junction GeoHelper::Position.new(5,10)
 
-		run_action {j1.connect_to j2, Road::SpeedLimit::MaxSpeedLimit}
-		run_action {j2.connect_to j3, Road::SpeedLimit::Normal}
+		run_action {m.connect_junctions j1, j2, Road::SpeedLimit::MaxSpeedLimit, two_way:true}
+		run_action {m.connect_junctions j2, j3, Road::SpeedLimit::Normal, two_way:true}
 
-		c1 = Car.new(4, 'Juan')
-		m.add_car(c1)
+		c1 = m.add_car(j1.position, 4, :map_name=> "Juan")
 
 		m.print_map
 		run_action {m.add_mission c1, j1, j3 }

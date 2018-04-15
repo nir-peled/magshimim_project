@@ -2,7 +2,7 @@ load 'map_object.rb'
 
 class MapStaticObject < MapObject
 
-	def initialize(position=nil)
-		super
+	def initialize(position, opt={})
+		super position, opt
 	end
 end

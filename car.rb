@@ -4,18 +4,19 @@ load 'driving.rb'
 
 class Car < MapDynamicObject
 
-	attr_reader :length, :name, :id
-	alias :id :object_id
+	attr_reader :length, :name
 
 	include Driving
 	include Mission
 
-	def initialize(length, name=nil)
-		@length = length
-		@name = name
+	def initialize(position, car_length=0, opt={})
+		super position, opt
+		@length = car_length
 	end
 
-	def to_s() @name; end
+	# the layer is greater in order to be above
+	# junctions or roads
+	def draw; super 2; end
 
 	def as_list_line
 		"#{to_s.ljust(6,' ')}|#{length.to_s.center(8,' ')}| #{status}"
@@ -24,5 +25,4 @@ class Car < MapDynamicObject
 	def Car.list_header
 		"\nCars\n=========\nname  | Length | Status   | Mission |Position\n------------------------------------"
 	end
-
 end
