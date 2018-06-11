@@ -16,7 +16,10 @@ class Car < MapDynamicObject
 
 	# the layer is greater in order to be above
 	# junctions or roads
-	def draw; super 2; end
+	def draw
+		@image = ObjectImage.get_image(:car, accel_to_image_index)
+		super 2
+	end
 
 	def as_list_line
 		"#{to_s.ljust(6,' ')}|#{length.to_s.center(8,' ')}| #{status}"
@@ -24,5 +27,20 @@ class Car < MapDynamicObject
 
 	def Car.list_header
 		"\nCars\n=========\nname  | Length | Status   | Mission |Position\n------------------------------------"
+	end
+
+	private
+
+	def accel_to_image_index
+		case accel
+		when Kinetic::Accel::NoAccel
+			:green_car
+		when Kinetic::Accel::NormalAccel, Kinetic::Accel::FastAccel
+			:orange_car
+		when Kinetic::Accel::SlowNormal, Kinetic::Accel::SlowFast
+			:blue_car
+		when Kinetic::Accel::EmergencyBreak
+			:red_car
+		end
 	end
 end

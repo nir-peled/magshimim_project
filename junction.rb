@@ -3,6 +3,7 @@ load 'map_static_object.rb'
 
 class Junction < MapStaticObject
 	attr_reader :outgoing_roads
+	attr_reader :ingoing_roads
 
 	MAX_ROAD_NUM = 4
 
@@ -13,19 +14,12 @@ class Junction < MapStaticObject
 		@map = map
 		@outgoing_roads = Set.new(roads)
 		def @outgoing_roads.to_s; map(&:to_s).join(','); end
-	end
-
-	def connect_to(other, speed_limit=nil)
-		exit_road = Road.new [self, other], self.distance_to(other), speed_limit
-		enter_road = Road.new [other, self], self.distance_to(other), speed_limit
-
-		add_road exit_road
-		other.add_road enter_road
+		@ingoing_roads = Set.new
 	end
 
 	def connected?(object)
 		if object.is_a? Road
-			@outgoing_roads.include? object
+			@outgoing_roads.include?(object) || @ingoing_roads.include?(object)
 		elsif object.is_a? Junction
 			@outgoing_roads.any? { |road| road.connected? object }
 		else
@@ -62,8 +56,12 @@ class Junction < MapStaticObject
 
 	def add_road(road)
 		throw ArgumentError, "Too many roads" if @outgoing_roads.size == MAX_ROAD_NUM
-		# @map.add_road road
 		@outgoing_roads << road
+	end
+
+	def add_ingoing_road(road)
+		throw ArgumentError, "Too many roads" if @ingoing_roads.size == MAX_ROAD_NUM
+		@ingoing_roads << road
 	end
 
 	def as_list_line

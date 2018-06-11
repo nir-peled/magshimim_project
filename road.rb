@@ -1,5 +1,4 @@
 load 'map_static_object.rb'
-load 'kinetic.rb'
 
 class Road < MapStaticObject
 	attr_reader :junctions, :speed_limit, :length
@@ -7,9 +6,9 @@ class Road < MapStaticObject
 	ROAD_COLOR = Gosu::Color::AQUA
 
 	module SpeedLimit
-		MaxSpeedLimit = Kinetic::Speed.new(3)
-		Normal = Kinetic::Speed.new(2)
-		Slow = Kinetic::Speed.new(1)
+		MaxSpeedLimit = Kinetic::Metric.new(3)
+		Normal = Kinetic::Metric.new(2)
+		Slow = Kinetic::Metric.new(1)
 	end
 
 	def initialize(junctions, length, opt={})

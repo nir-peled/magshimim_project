@@ -1,4 +1,6 @@
 require 'set'
+require 'thread'
+load 'kinetic.rb'
 load "junction.rb"
 load "road.rb"
 load "car.rb"
@@ -11,14 +13,19 @@ module MapHelper
 		@cars = Set.new
 		@roads = Set.new
 		@junctions = Set.new
+		# @road_population = Hash.new { |hash, road| hash[road] = {} }
+		@car_positions = {}
+		@position_mutex = Mutex.new
 	end
 
 	def cars_count; cars.length; end
 	def roads_count; roads.length; end
 	def junctions_count; junctions.length end
 
-	def add_mission (car, from_junction, to_junction)
-		car.set_mission self, from_junction, to_junction
+	def add_mission (car, from_junction, to_junction, and_back=true, recursive=true)
+		and_back = and_back.nil? ? true : and_back
+		recursive = recursive.nil? ? true : recursive
+		car.set_mission self, from_junction, to_junction, and_back, recursive
 	end
 
 	def create_car(position, length=0)
@@ -95,20 +102,44 @@ module MapHelper
 		 road_speed_limit:speed_limit
 		add_road road
 		start_junction.add_road road
+		end_junction.add_ingoing_road road
 	end
 
+	def update_car_position(car, map_object, distance)
+		@position_mutex.lock
+		@car_positions[car] = [map_object, distance]
+		@position_mutex.unlock
+		if map_object.nil?
+			car.move nil
+			return
+		end
+
+		Log.debug "#{car}> [#{map_object}, #{distance}]"  if map_object.is_a? Junction
+		update_distance_on_road car, map_object, distance  if map_object.is_a? Road
+
+		check_for_collision car
+	ensure
+		@position_mutex.unlock  if @position_mutex.owned?
+	end
+
+	# for draw purposes
 	def update_distance_on_road(car, road, distance)
 		car.move road.start_junction.position
 		car.push road.direction, distance
 		car.set_angle road.angle
 	end
 
-	def start_cars
-		cars.each &:go!
-	end
+	def cars_on_object(obj)
+		@position_mutex.lock
+		# find car, [map_obj, distance] where map_obj==<obj>
+		# cars_on_obj = @car_positions.find_all { |car, pos| pos.first == obj }
+		# [car, distance]
+		# cars_on_obj.map {|car, pos| [car, pos.last] }
 
-	def stop_cars
-		cars.each &:force_finish
+		# [car, distance] where map_obj==<obj>
+		@car_positions.map_if {|car, pos| [car, pos.last] if pos.first == obj }
+	ensure
+		@position_mutex.unlock
 	end
 
 private
@@ -119,5 +150,21 @@ private
 	def self_add_junction(junction)
 		junctions << junction
 		junction.map_name = "J#{junctions_count}"
+	end
+
+	def check_for_collision(car)
+		map_object, distance = @car_positions[car]
+		return if map_object.nil?
+		other_cars = cars_on_object(map_object).delete_if {|c, dis| c == car }
+		any_crashed = false
+
+		other_cars.each { |c, o_distance| 
+			if map_object.is_a?(Junction) || (o_distance - distance).abs < c.length
+				c.crashed "collision on #{map_object}"
+				any_crashed = true
+			end
+		}
+
+		car.crashed "collision on #{map_object}" if any_crashed
 	end
 end

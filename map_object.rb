@@ -11,18 +11,15 @@ class MapObject
 	def initialize(position, opt={})
 		@id = @@id_counter += 1
 		@position = position
-		@image_type = opt[:image]
+		@image = opt[:image]
 		@map_name = opt[:map_name]
 		@angle = opt[:angle] ? opt[:angle] : 0
 	end
 
 	def draw(layer=1)
+		return if position.nil?
 		# ObjectImage.draw_image type, position.x, position.y, layer, @angle
-		@image_type.draw_on_map(position.x, position.y, layer, @angle)
-	end
-
-	def type
-		!@image_type.nil? ? @image_type : self.class.to_s.downcase.to_sym
+		@image.draw_on_map(position.x, position.y, layer, @angle)
 	end
 
 	def to_s

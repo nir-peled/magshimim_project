@@ -35,21 +35,24 @@ module Mission
 		end
 
 		def print_route
+			Log.debug "@route = #{@route.inspect}"
 			str = @route.first.start_junction.to_s + ","
 			str += @route.map {|road| road.to_s + "," + road.end_junction.to_s }.join(",")
 			Log.full str
 		end
 	end
 
-	def set_mission(_map, _from_junction, _to_junction, and_back=false, recurr=false) 
+	def set_mission(_map, _from_junction, _final_junction, _and_back=false, _recurr=false) 
 		if @status && @status <= Statuses::Active
 			raise ImpossibleActionForStatus.new("This car in on a mission. Abort it first.")
 		end
 
 		@map = _map
 		@from_junction = _from_junction
-		@to_junction = _to_junction
+		@final_junction = _final_junction
 		@status = Statuses::Active
+		@and_back = _and_back
+		@recurr = _recurr
 
 	rescue MissionError => e 
 		Log.warn e.message
@@ -60,12 +63,13 @@ module Mission
 		raise ImpossibleActionForStatus.new("Cannot 'go!' when #{@status}") unless @status == Statuses::Active
 
 		# Get route
-		@route = Route.new @map.route_for(@from_junction, @to_junction)
+		@route = Route.new @map.route_for(@from_junction, @final_junction)
 		Log.full "route is: "
 		@route.print_route
 
-		driver_thread = init_driving(@from_junction)
-		if driver_thread
+
+		@driver_thread = init_driving(@from_junction)  if @driver_thread.nil?
+		if @driver_thread
 			@status = Statuses::Driving
 		else
 			raise MissionError.new("Driver error. Could not start driving.")
@@ -74,7 +78,7 @@ module Mission
 		road = @route.next_road
 		Log.full ".. drive on #{road}"
 		drive_on road
-		return driver_thread
+		return @driver_thread
 	rescue MissionError => e
 		Log.warn e.message
 	end
@@ -90,8 +94,8 @@ module Mission
 			raise ImpossibleActionForStatus.new("'approach' called in #{status}")
 		end
 		
-		Log.info "currnet junction = #{junction}, to_junction = #{to_junction}"
-		if junction == to_junction
+		Log.info "currnet junction = #{junction}, final_junction = #{final_junction}"
+		if junction == final_junction
 			Log.full " .. park_at_next_junction!"
 			park_at_next_junction 
 		else
@@ -114,34 +118,55 @@ module Mission
 		Log.full "<< approaching" 
 	end
 
-	def report_not_driving status, position
-		if status == Statuses::Parked
+	def report_not_driving(status, position)
+		# Log.debug "report_not_driving #{status.inspect}, #{position.to_s}"
+		# Log.debug "status = #{status}, status == :Parked ? (#{status == :Parked})"
+		if status == :Parked
 			parked_at position
 		else
 			crashed_at position
 		end
-		stop_driving
 	end
 
 private 
 
-	def parked_at junction
-		if junction == @to_junction
+	def parked_at(junction)
+		Log.debug "parked_at #{junction.to_s} (@final_junction = #{@final_junction.to_s})"
+		if junction == @final_junction
 			Log.full "#{map_name} had reached its destination"
-			@status = Statuses::Completed
+			complete_mission
 		end
 	end
 
-	def crashed_at position
-		unless status <= Statuses::Driving
-			raise ImpossibleActionForStatus.new("Cannot 'crash!' when #{status}")
-		end
+	def crashed_at(position)
+		raise ImpossibleActionForStatus.new("Cannot 'crash!' when #{status}") unless status <= Statuses::Driving
 
 		# do crash actions
+		Log.warn "Car #{map_name} crashed at #{position}"
 		status == Statuses::Crashed
+		
 	rescue MissionError => e 
 		Log.warn e.message
+	ensure
+		stop_driving
 	end
 
-	attr :map, :from_junction, :to_junction, :status, :route
+	def complete_mission
+		Log.full "#{map_name} > mission completed"
+		@status = Statuses::Completed
+		if @and_back
+			@and_back = @recurr
+			go_back
+		else
+			stop_driving
+		end
+	end
+
+	def go_back
+		@status = Statuses::Active
+		@from_junction, @final_junction = @final_junction, @from_junction
+		go!
+	end
+
+	attr :map, :from_junction, :final_junction, :status, :route
 end
