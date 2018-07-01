@@ -9,6 +9,6 @@ class SimulatorTester < Tester
 	end
 end
 
-Log.set_level(Log::Level::FULL)
+# Log.set_level(Log::Level::FULL)
 Thread.abort_on_exception = true
 SimulatorTester.run_test

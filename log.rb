@@ -1,4 +1,7 @@
 require 'thread' # mutex
+
+# the Log class
+# prints to the log at different levels
 class Log
 
 	module Level

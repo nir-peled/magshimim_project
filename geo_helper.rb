@@ -1,3 +1,6 @@
+
+# a module for MapObject class to enable physical
+# location and distance measuring
 module GeoHelper
 
 	class Position

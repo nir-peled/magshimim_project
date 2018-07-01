@@ -2,6 +2,7 @@ load 'map_dynamic_object.rb'
 load 'mission.rb'
 load 'driving.rb'
 
+# this object represent a car on the map
 class Car < MapDynamicObject
 
 	attr_reader :length, :name
@@ -35,9 +36,9 @@ class Car < MapDynamicObject
 		case accel
 		when Kinetic::Accel::NoAccel
 			:green_car
-		when Kinetic::Accel::NormalAccel, Kinetic::Accel::FastAccel
+		when Kinetic::Accel::SlowAccel, Kinetic::Accel::NormalAccel, Kinetic::Accel::FastAccel
 			:orange_car
-		when Kinetic::Accel::SlowNormal, Kinetic::Accel::SlowFast
+		when Kinetic::Accel::SlowSlow, Kinetic::Accel::SlowNormal, Kinetic::Accel::SlowFast
 			:blue_car
 		when Kinetic::Accel::EmergencyBreak
 			:red_car

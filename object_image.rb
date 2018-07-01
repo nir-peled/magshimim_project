@@ -1,4 +1,7 @@
 
+# this class represents an image of a map object
+# the class holds every object's image, and the objects
+# reference to it. 
 class ObjectImage < Gosu::Image
 
 	class ImageError < StandardError; end
@@ -11,6 +14,7 @@ class ObjectImage < Gosu::Image
 		define_singleton_method("draw_" + key.to_s) {|*args| @@images[key].draw_on_map *args } if key != :background
 	}
 
+	# prints images for debug purposes
 	def self.debug_images
 		Log.debug @@images.inspect
 	end
@@ -19,6 +23,7 @@ class ObjectImage < Gosu::Image
 		@@media_dir = dir_name.nil? ? "." : dir_name
 	end
 
+	# sets an object's registered image to a new one
 	def self.init_image(type, filename)
 		check_image_exists type
 		image = image_by_type(filename)
@@ -33,7 +38,7 @@ class ObjectImage < Gosu::Image
 
 	def self.get_image(type, index=nil)
 		image = @@images[type]
-		image.respond_to?(:each) ? image[index] : image
+		image.respond_to?(:[]) ? image[index] : image
 	end
 
 	def self.draw_background; @@images[:background].draw(0, 0, 0); end
@@ -62,15 +67,14 @@ class ObjectImage < Gosu::Image
 	end
 
 	def self.image_by_type(object, level=0)
-		a = nil
 		if object.is_a?(String)
-			a = filename_to_image(object)
+			filename_to_image(object)
 		elsif object.is_a?(Hash)
-			a = object.transform_values {|v| image_by_type(v, level+1) }
+			object.transform_values {|v| image_by_type(v, level+1) }
 		elsif object.respond_to?(:each)
-			a = object.map {|e| image_by_type(e, level+1) }
+			object.map {|e| image_by_type(e, level+1) }
 		else
-			a = nil
+			raise ArgumentError, "#{object.inspect} (#{object.class}) cannot be converted into an Image"
 		end
 	end
 

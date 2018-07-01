@@ -1,5 +1,8 @@
 load 'map_static_object.rb'
 
+# this class represents a Road.
+# include length, end junctions and speed limit
+# includes the Road's direction or angle
 class Road < MapStaticObject
 	attr_reader :junctions, :speed_limit, :length
 

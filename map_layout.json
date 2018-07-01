@@ -63,11 +63,11 @@
 	],
 
 	"cars" : [
-		// {"start_j" : "D", "end_j" : "A", "length" : 3},
-		// {"start_j" : "C", "end_j" : "A", "length" : 3},
+		{"start_j" : "D", "end_j" : "A", "length" : 3},
+		{"start_j" : "C", "end_j" : "A", "length" : 3},
 		// {"start_j" : "G", "end_j" : "A", "length" : 3},
-		{"start_j" : "H", "end_j" : "Y", "length" : 3},
-		{"start_j" : "J", "end_j" : "V", "length" : 3},
+		// {"start_j" : "H", "end_j" : "Y", "length" : 3},
+		// {"start_j" : "J", "end_j" : "V", "length" : 3},
 		// {"start_j" : "L", "end_j" : "N", "length" : 3},
 		// {"start_j" : "G", "end_j" : "T", "length" : 3},
 		// {"start_j" : "F", "end_j" : "P", "length" : 3},

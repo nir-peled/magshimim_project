@@ -1,3 +1,8 @@
+
+# this module represents a Car's
+# Mission, namely it's start and end junctions
+# and it's route. It communicate with Driving
+# and gives it instructions
 module Mission
 
 	module Statuses
@@ -88,6 +93,8 @@ module Mission
 		stop_driving
 	end
 
+	# used by Driving to inform about closing to junction, 
+	# and to ask for new instructions
 	def approaching(junction)
 		Log.full ">> approaching #{junction}"
 		unless status <= Statuses::Driving
@@ -118,9 +125,8 @@ module Mission
 		Log.full "<< approaching" 
 	end
 
+	# used by Driving to report stopping
 	def report_not_driving(status, position)
-		# Log.debug "report_not_driving #{status.inspect}, #{position.to_s}"
-		# Log.debug "status = #{status}, status == :Parked ? (#{status == :Parked})"
 		if status == :Parked
 			parked_at position
 		else
@@ -144,7 +150,6 @@ private
 		# do crash actions
 		Log.warn "Car #{map_name} crashed at #{position}"
 		status == Statuses::Crashed
-		
 	rescue MissionError => e 
 		Log.warn e.message
 	ensure
@@ -156,6 +161,7 @@ private
 		@status = Statuses::Completed
 		if @and_back
 			@and_back = @recurr
+			# if @recurr, continue looping. else, just this once
 			go_back
 		else
 			stop_driving

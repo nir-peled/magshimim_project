@@ -1,4 +1,6 @@
 
+# the module used to generate map object
+# from a hash
 module MapGenerator
 	def self.create_map(game_map, map_hash)
 		junctions_by_id = add_junctions game_map, map_hash[:junctions]
@@ -7,6 +9,8 @@ module MapGenerator
 	end
 
 	private
+	# add the junctions to the map, and keeps track of each junction's
+	# inner name, for roads and cars later
 	def self.add_junctions(game_map, junctions)
 		# Hash[junctions.map {|e| [e[:id], game_map.add_junction GeoHelper::Position.new(e[:x], e[:y])] }]
 		junctions_by_id = {}

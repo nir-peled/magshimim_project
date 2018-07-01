@@ -1,5 +1,7 @@
 load 'map_object.rb'
 
+# this class represents a dynamic object (namely, Car).
+# include physical movement functions
 class MapDynamicObject < MapObject
 	def initialize(start_pos, opt={})
 		super start_pos, opt
@@ -22,8 +24,8 @@ class MapDynamicObject < MapObject
 		set_angle @angle + angle_offset
 	end
 
-	def is_angle_legal(angle_check)
-		(-360.0..360.0).include? angle_check
+	def is_angle_legal(angle_to_check)
+		(-360.0..360.0).include? angle_to_check
 	end
 
 	def push(offset, amount=1)
@@ -31,5 +33,4 @@ class MapDynamicObject < MapObject
 		new_y = position.y + offset[1] * amount
 		move GeoHelper::Position.new(new_x, new_y)
 	end
-
 end

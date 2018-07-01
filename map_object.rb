@@ -1,6 +1,8 @@
 load 'geo_helper.rb'
 load 'object_image.rb'
 
+# this class represents a map objec
+# all other map object classes inherit from this one
 class MapObject
 	@@id_counter = -1
 	include GeoHelper

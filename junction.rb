@@ -13,8 +13,9 @@ class Junction < MapStaticObject
 
 		@map = map
 		@outgoing_roads = Set.new(roads)
-		def @outgoing_roads.to_s; map(&:to_s).join(','); end
 		@ingoing_roads = Set.new
+		def @outgoing_roads.to_s; map(&:to_s).join(','); end
+		def @ingoing_roads.to_s; map(&:to_s).join(','); end
 	end
 
 	def connected?(object)
@@ -32,9 +33,10 @@ class Junction < MapStaticObject
 	end
 
 	def neighbors
-		@outgoing_roads.map {|road| road.opposite_junction self }.compact
+		@outgoing_roads.map(&:end_junction)
 	end
 
+	# returns the time it takes to pass from self to <other>
 	def cost_to(other)
 		throw ArgumentError, "Junctions are not connected" if !connected?(other)
 		road_to(other).passage_time
